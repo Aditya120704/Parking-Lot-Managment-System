@@ -1,8 +1,8 @@
 class ParkingLot:
     def __init__(self, capacity):
         self.capacity = capacity
-        self.parking_slots = []  # Stack for parked vehicles
-        self.waitlist = []  # Queue for waitlisted vehicles
+        self.parking_slots = []  
+        self.waitlist = []  
 
     def park_vehicle(self, vehicle_number):
         if len(self.parking_slots) < self.capacity:
