@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, render_template
 from parking_system.core import ParkingLot
 
 app = Flask(__name__)
-parking_lot = ParkingLot(capacity=3)  # Initialize with default capacity
+parking_lot = ParkingLot(capacity=5)  
 
 @app.route('/')
 def index():
