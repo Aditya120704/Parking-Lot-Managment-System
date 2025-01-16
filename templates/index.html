@@ -3,71 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parking System</title>
+    <title>Parking Lot Management</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Parking Lot Management</h1>
-    
-    <div class="section">
-        <h2>Park a Vehicle</h2>
-        <input type="text" id="vehicleNumber" placeholder="Enter Vehicle Number">
-        <button onclick="parkVehicle()">Park Vehicle</button>
-    </div>
-    
-    <div class="section">
-        <h2>Remove a Vehicle</h2>
-        <input type="text" id="removeVehicleNumber" placeholder="Enter Vehicle Number">
-        <button onclick="removeVehicle()">Remove Vehicle</button>
-    </div>
-    
-    <div class="section">
-        <h2>Status</h2>
-        <button onclick="getStatus()">Get Status</button>
-        <div id="statusOutput" class="status-output"></div>
-    </div>
-    
+    <header class="header">
+        <div class="header-content">
+            <h1>Parking Lot Management System</h1>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="card">
+            <h2>Park a Vehicle</h2>
+            <form id="parkForm" onsubmit="event.preventDefault(); parkVehicle();">
+                <div class="form-group">
+                    <label for="vehicleNumber">Vehicle Number:</label>
+                    <input type="text" id="vehicleNumber" placeholder="Enter Vehicle Number" required>
+                </div>
+                <button type="submit" class="btn-primary">Park Vehicle</button>
+                <p id="parkFeedback" class="feedback"></p>
+            </form>
+        </section>
+
+        <section class="card">
+            <h2>Remove a Vehicle</h2>
+            <form id="removeForm" onsubmit="event.preventDefault(); removeVehicle();">
+                <div class="form-group">
+                    <label for="removeVehicleNumber">Vehicle Number:</label>
+                    <input type="text" id="removeVehicleNumber" placeholder="Enter Vehicle Number" required>
+                </div>
+                <button type="submit" class="btn-primary">Remove Vehicle</button>
+                <p id="removeFeedback" class="feedback"></p>
+            </form>
+        </section>
+
+        <section class="card">
+            <h2>Parking Lot Status</h2>
+            <button class="btn-secondary" onclick="getStatus()">Get Status</button>
+            <div id="statusOutput" class="status-output"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Parking Lot Management.</p>
+    </footer>
+
     <script>
         async function parkVehicle() {
             const vehicleNumber = document.getElementById('vehicleNumber').value;
-            const response = await fetch('/api/park', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ vehicle_number: vehicleNumber })
-            });
-            const result = await response.json();
-            alert(result.message);
-            document.getElementById('vehicleNumber').value = ''; 
+            try {
+                const response = await fetch('/api/park', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ vehicle_number: vehicleNumber })
+                });
+                const result = await response.json();
+                document.getElementById('parkFeedback').innerText = result.message || result.error;
+            } catch (error) {
+                document.getElementById('parkFeedback').innerText = "Error parking vehicle.";
+            }
+            document.getElementById('vehicleNumber').value = '';
         }
 
         async function removeVehicle() {
             const vehicleNumber = document.getElementById('removeVehicleNumber').value;
-            const response = await fetch('/api/remove', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ vehicle_number: vehicleNumber })
-            });
-            const result = await response.json();
-            alert(result.message);
-            document.getElementById('removeVehicleNumber').value = ''; 
+            try {
+                const response = await fetch('/api/remove', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ vehicle_number: vehicleNumber })
+                });
+                const result = await response.json();
+                document.getElementById('removeFeedback').innerText = result.message || result.error;
+            } catch (error) {
+                document.getElementById('removeFeedback').innerText = "Error removing vehicle.";
+            }
+            document.getElementById('removeVehicleNumber').value = '';
         }
 
         async function getStatus() {
-            const response = await fetch('/api/status');
-            const status = await response.json();
-            const output = `
-                <strong>Total Capacity:</strong> ${status.capacity}<br>
-                <strong>Occupied Slots:</strong> ${status.occupied}<br>
-                <strong>Available Slots:</strong> ${status.available}<br>
-                <strong>Parked Vehicles:</strong> ${status.parked_vehicles.length > 0 ? status.parked_vehicles.join(', ') : 'None'}<br>
-                <strong>Waitlisted Vehicles:</strong> ${status.waitlisted_vehicles.length > 0 ? status.waitlisted_vehicles.join(', ') : 'None'}
-            `;
-            document.getElementById('statusOutput').innerHTML = output;
+            try {
+                const response = await fetch('/api/status');
+                const status = await response.json();
+                const output = `
+                    <strong>Total Capacity:</strong> ${status.capacity}<br>
+                    <strong>Occupied Slots:</strong> ${status.occupied}<br>
+                    <strong>Available Slots:</strong> ${status.available}<br>
+                    <strong>Parked Vehicles:</strong> ${status.parked_vehicles.length > 0 ? status.parked_vehicles.join(', ') : 'None'}<br>
+                    <strong>Waitlisted Vehicles:</strong> ${status.waitlisted_vehicles.length > 0 ? status.waitlisted_vehicles.join(', ') : 'None'}
+                `;
+                document.getElementById('statusOutput').innerHTML = output;
+            } catch (error) {
+                document.getElementById('statusOutput').innerHTML = "Error retrieving status.";
+            }
         }
     </script>
 </body>
 </html>
+
