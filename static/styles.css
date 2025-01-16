@@ -1,11 +1,11 @@
 
 :root {
-    --primary-color: #6200ea; /* Purple */
-    --primary-hover: #3700b3; /* Darker Purple */
-    --secondary-color: #121212; /* Dark background */
-    --text-color: #e0e0e0; /* Light text */
-    --card-bg: #1e1e1e; /* Dark card background */
-    --card-border: #333; /* Darker border */
+    --primary-color: #6200ea;
+    --primary-hover: #3700b3;
+    --secondary-color: #121212;
+    --text-color: #e0e0e0;
+    --card-bg: #1e1e1e; 
+    --card-border: #333; 
     --shadow-color: rgba(0, 0, 0, 0.5);
     --border-radius: 8px;
 }
@@ -58,7 +58,6 @@ body {
     box-shadow: 0 6px 12px var(--shadow-color);
 }
 
-/* Form Styles */
 .form-group {
     margin-bottom: 15px;
 }
